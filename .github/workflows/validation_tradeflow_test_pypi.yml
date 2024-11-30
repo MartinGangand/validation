@@ -1,0 +1,33 @@
+name: Validation tradeflow Test PyPi
+
+on: [push, workflow_dispatch]
+
+jobs:
+  validation-tradeflow-test-pypi:
+    name: Validation tradeflow Test PyPi
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04, ubuntu-22.04, ubuntu-24.04, macos-13, macos-14, macos-15, windows-latest, windows-2022, windows-2019]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -i https://test.pypi.org/simple/ tradeflow --extra-index-url https://pypi.org/simple/
+          pip install numpy matplotlib
+
+      - name: Run validation
+        run: python tradeflow/validation.py
