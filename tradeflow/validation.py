@@ -10,7 +10,7 @@ logger = get_logger(__file__)
 signs = np.loadtxt(DATA_FOLDER.joinpath("signs-20240720.txt"), dtype="int8", delimiter=",")
 
 max_orders = [20, 60]
-fit_methods = ["yule_walker", "ols_with_cst"]
+fit_methods = ["yule_walker", "burg", "ols_with_cst"]
 seeds = [1, None]
 
 s1 = time.time()
