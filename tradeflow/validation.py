@@ -9,18 +9,19 @@ logger = get_logger(__file__)
 
 signs = np.loadtxt(DATA_FOLDER.joinpath("signs-20240720.txt"), dtype="int8", delimiter=",")
 
-max_orders = [20, 60]
+max_orders_and_selection_methods = [(None, None), (None, "pacf"), (80, "pacf")]
 fit_methods = ["yule_walker", "burg", "ols_with_cst"]
 seeds = [1, None]
 
 s1 = time.time()
-for max_order in max_orders:
+for max_order, order_selection_method in max_orders_and_selection_methods:
+    print(max_order, order_selection_method)
     for fit_method in fit_methods:
         for seed in seeds:
             logger.info(f"START")
             logger.info(f"max_order: {max_order} | order_selection_method: pacf | fit_method: {fit_method} | seed: {seed}")
             s2 = time.time()
-            ar_model = tradeflow.AR(signs=signs, max_order=max_order, order_selection_method="pacf")
+            ar_model = tradeflow.AR(signs=signs, max_order=max_order, order_selection_method=order_selection_method)
             ar_model = ar_model.fit(method=fit_method, significance_level=0.05, check_residuals=True)
 
             ar_model.simulate(size=300_000, seed=seed)
