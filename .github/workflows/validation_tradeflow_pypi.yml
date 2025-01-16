@@ -1,6 +1,6 @@
 name: Validation tradeflow PyPi
 
-on: [push, workflow_dispatch]
+on: [workflow_dispatch]
 
 jobs:
   validation-tradeflow-pypi:
