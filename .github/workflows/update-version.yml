@@ -1,7 +1,7 @@
 name: Update Version Number
 
 on:
-  push:
+  workflow_dispatch:
   release:
     types: [published]
 
@@ -16,16 +16,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ssh-key: ${{secrets.BOT2}}
 
       - name: Update Version Number
         id: update_version
         run: |
-          # Extract the current version (e.g., "0.0.2")
            OLD_VERSION=$(grep ^version pyproject.toml | cut -d '"' -f 2)
            echo "Old version: $OLD_VERSION"
           
-           # Increment the patch version (third number after the dots)
            IFS='.' read -r major minor patch <<< "$OLD_VERSION"
            patch=$((patch + 1))
            NEW_VERSION="$major.$minor.$patch"
@@ -35,14 +33,10 @@ jobs:
            # Replace the version in pyproject.toml
            sed -i "s+version = \"$OLD_VERSION\"+version = \"$NEW_VERSION\"+g" pyproject.toml
            echo "New version: $NEW_VERSION"
- 
 
-      - name: Config user
+      - name: Push version
         run: |
-          echo "New version: ${{ steps.update_version.outputs.NEW_VERSION }}"
-          git config user.name "$GITHUB_ACTOR"
-          echo ----- "$GITHUB_ACTOR"
-          echo ++++++ "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git commit -a -m "Update version number to ${{ steps.update_version.outputs.NEW_VERSION }}"
-          git push origin HEAD:update-version
+          git push origin HEAD:main
