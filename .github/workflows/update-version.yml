@@ -1,42 +1,42 @@
-name: Update Version Number
-
-on:
-  workflow_dispatch:
-  release:
-    types: [published]
-
-permissions:
-  contents: write
-
-jobs:
-  update-version-number:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          ssh-key: ${{secrets.BOT2}}
-
-      - name: Update Version Number
-        id: update_version
-        run: |
-          OLD_VERSION=$(grep ^version pyproject.toml | cut -d '"' -f 2)
-          echo "Old version: $OLD_VERSION"
-          
-          IFS='.' read -r major minor patch <<< "$OLD_VERSION"
-          patch=$((patch + 1))
-          NEW_VERSION="$major.$minor.$patch"
-          echo "New version: $NEW_VERSION"
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
-          
-          # Replace the version in pyproject.toml
-          sed -i "s+version = \"$OLD_VERSION\"+version = \"$NEW_VERSION\"+g" pyproject.toml
-          echo "New version: $NEW_VERSION"
-
-      - name: Push version
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -a -m "Update version number to ${{ steps.update_version.outputs.NEW_VERSION }}"
-          git push origin HEAD:main
+#name: Update Version Number
+#
+#on:
+#  workflow_dispatch:
+#  release:
+#    types: [published]
+#
+#permissions:
+#  contents: write
+#
+#jobs:
+#  update-version-number:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#        with:
+#          ssh-key: ${{secrets.BOT2}}
+#
+#      - name: Update Version Number
+#        id: update_version
+#        run: |
+#          OLD_VERSION=$(grep ^version pyproject.toml | cut -d '"' -f 2)
+#          echo "Old version: $OLD_VERSION"
+#
+#          IFS='.' read -r major minor patch <<< "$OLD_VERSION"
+#          patch=$((patch + 1))
+#          NEW_VERSION="$major.$minor.$patch"
+#          echo "New version: $NEW_VERSION"
+#          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+#
+#          # Replace the version in pyproject.toml
+#          sed -i "s+version = \"$OLD_VERSION\"+version = \"$NEW_VERSION\"+g" pyproject.toml
+#          echo "New version: $NEW_VERSION"
+#
+#      - name: Push version
+#        run: |
+#          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+#          git config --local user.name "github-actions[bot]"
+#          git commit -a -m "Update version number to ${{ steps.update_version.outputs.NEW_VERSION }}"
+#          git push origin HEAD:main
