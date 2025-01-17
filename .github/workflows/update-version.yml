@@ -40,5 +40,3 @@
 #          git config --local user.name "github-actions[bot]"
 #          git commit -a -m "Update version number to ${{ steps.update_version.outputs.NEW_VERSION }}"
 #          git push origin HEAD:main
-
-
