@@ -39,4 +39,4 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -a -m "Update version number to ${{ steps.update_version.outputs.NEW_VERSION }}"
-          git push origin HEAD:main
+          git push origin HEAD:main 
