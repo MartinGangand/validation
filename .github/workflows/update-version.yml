@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ssh-key: ${{secrets.BOT2}}
 
       - name: Update Version Number
         id: update_version
