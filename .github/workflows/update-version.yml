@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ssh-key: ${{secrets.GITHUB_TOKEN}}
+          ssh-key: ${{secrets.BOT}}
 
       - name: Update Version Number
         id: update_version
